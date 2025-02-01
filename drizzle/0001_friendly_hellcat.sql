@@ -1,0 +1,3 @@
+ALTER TABLE "expense_by_category" DROP CONSTRAINT "expense_by_category_expense_summary_id_expense_summary_expense_summary_id_fk";
+--> statement-breakpoint
+ALTER TABLE "expense_by_category" ADD CONSTRAINT "expense_by_category_expense_summary_id_expense_summary_expense_summary_id_fk" FOREIGN KEY ("expense_summary_id") REFERENCES "public"."expense_summary"("expense_summary_id") ON DELETE cascade ON UPDATE no action;
