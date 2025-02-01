@@ -1,14 +1,14 @@
 // auth/authOptions.ts
-import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 import type { NextAuthConfig } from "next-auth"
 import NextAuth from "next-auth"
 import Discord from "next-auth/providers/discord"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
-import { db } from "../db"
+import db from "../db/prisma"
 
 export const authOptions: NextAuthConfig = {
-  adapter: DrizzleAdapter(db),
+  adapter: PrismaAdapter(db),
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,

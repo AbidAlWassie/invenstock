@@ -7,6 +7,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
 async function getProduct(id: string) {
+  // Using Prisma to fetch a unique product by its productId
   const product = await prisma.products.findUnique({
     where: { productId: id },
   })
@@ -20,6 +21,7 @@ async function updateProduct(id: string, formData: FormData) {
   const stockQuantity = Number.parseInt(formData.get("stockQuantity") as string)
 
   if (name && !isNaN(price) && !isNaN(stockQuantity)) {
+    // Using Prisma to update the product record
     await prisma.products.update({
       where: { productId: id },
       data: { name, price, stockQuantity },
@@ -32,14 +34,14 @@ async function updateProduct(id: string, formData: FormData) {
 export default async function EditProduct({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>
 }) {
-  const { id } = await params;
+  const { id } = await params
 
-  const product = await getProduct(id);
+  const product = await getProduct(id)
 
   if (!product) {
-    return <div>Product not found</div>;
+    return <div>Product not found</div>
   }
 
   return (
@@ -79,5 +81,5 @@ export default async function EditProduct({
         <Button type="submit">Update Product</Button>
       </form>
     </div>
-  );
+  )
 }

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import prisma from "@/db/prisma"
+import db from "@/db/prisma"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { v4 as uuidv4 } from "uuid"
@@ -14,7 +14,7 @@ async function addProduct(formData: FormData) {
   const stockQuantity = Number.parseInt(formData.get("stockQuantity") as string)
 
   if (name && !isNaN(price) && !isNaN(stockQuantity)) {
-    await prisma.products.create({
+    await db.products.create({
       data: {
         productId: uuidv4(),
         name,

@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function DemoPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-8">
+    <div className="flex min-h-[80vh] flex-col items-center justify-center bg-background px-8 py-0">
       <div className="container max-w-3xl space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold tracking-tight">Welcome to the Demo Subdomain</h1>
