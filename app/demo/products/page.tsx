@@ -2,7 +2,7 @@
 import ProductList from "@/components/ProductList";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import prisma from "@/db/prisma"; // This should be an instantiated PrismaClient
+import prisma from "@/lib/prisma"; // This should be an instantiated PrismaClient
 import { Plus } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";

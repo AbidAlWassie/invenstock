@@ -1,4 +1,4 @@
-// app/api/auth/error/page.tsx
+// app/(auth)/error/page.tsx
 
 "use client"
 
@@ -44,7 +44,7 @@ function ErrorPageContent() {
         </CardHeader>
         <CardContent className="space-y-6">
           <Button asChild className="w-full">
-            <Link href="/auth/signin">Try Again</Link>
+            <Link href="/signin">Try Again</Link>
           </Button>
           <Button asChild variant="outline" className="w-full">
             <Link href="/">Go Home</Link>

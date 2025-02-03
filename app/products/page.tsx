@@ -2,7 +2,7 @@
 import ProductList from "@/components/ProductList"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import prisma from "@/db/prisma"
+import prisma from "@/lib/prisma"
 import { Plus } from "lucide-react"
 import { revalidatePath } from "next/cache"
 import Link from "next/link"
@@ -13,7 +13,7 @@ async function getProducts() {
       productId: "asc",
     },
   })
-  return productList || [] // Ensure fallback to an empty array
+  return productList || []
 }
 
 async function deleteProduct(formData: FormData) {

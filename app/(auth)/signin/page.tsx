@@ -1,7 +1,7 @@
-// app/api/auth/signin/page.tsx
-"use client"
+// app/(auth)/signin/page.tsx
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,58 +9,64 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { signIn } from "next-auth/react"
-import Link from "next/link"
-import { useSearchParams } from "next/navigation"
-import { Suspense, useEffect, useState } from "react"
-import { FaDiscord, FaEye, FaEyeSlash, FaGithub, FaGoogle } from "react-icons/fa"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import {
+  FaDiscord,
+  FaEye,
+  FaEyeSlash,
+  FaGithub,
+  FaGoogle,
+} from "react-icons/fa";
 
 function SignInComponent() {
-  const [loadingProvider, setLoadingProvider] = useState<string | null>(null)
-  const [isClient, setIsClient] = useState(false)
-  const [email, setEmail] = useState("")
-  const [signupEmail, setSignupEmail] = useState("")
-  const [signupUsername, setSignupUsername] = useState("")
-  const [signupPassword, setSignupPassword] = useState("")
-  const [signinPassword, setSigninPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const searchParams = useSearchParams()
+  const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
+  const [email, setEmail] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupUsername, setSignupUsername] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signinPassword, setSigninPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    setIsClient(true);
+  }, []);
 
   if (!isClient) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
-  const error = searchParams.get("error")
-  const callbackUrl = searchParams.get("callbackUrl") || "/"
+  const error = searchParams.get("error");
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleSignIn = async (
-    provider: "google" | "github" | "discord" | "email",
+    provider: "google" | "github" | "discord" | "email"
   ) => {
     try {
-      setLoadingProvider(provider)
+      setLoadingProvider(provider);
       if (provider === "email") {
-        await signIn("email", { email, callbackUrl, redirect: false })
+        await signIn("email", { email, callbackUrl, redirect: false });
       } else {
-        await signIn(provider, { callbackUrl, redirect: true })
+        await signIn(provider, { callbackUrl, redirect: true });
       }
     } catch (error) {
-      console.error("Sign in error:", error)
+      console.error("Sign in error:", error);
     } finally {
-      setLoadingProvider(null)
+      setLoadingProvider(null);
     }
-  }
+  };
 
   const handleSignUp = async () => {
     try {
-      setLoadingProvider("email")
+      setLoadingProvider("email");
       // Implement your signup logic here
       // You'll need to create an API endpoint to handle user registration
       // For now, this is a placeholder
@@ -68,20 +74,20 @@ function SignInComponent() {
         email: signupEmail,
         username: signupUsername,
         password: signupPassword,
-      })
+      });
     } catch (error) {
-      console.error("Sign up error:", error)
+      console.error("Sign up error:", error);
     } finally {
-      setLoadingProvider(null)
+      setLoadingProvider(null);
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 to-indigo-900 px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md border-indigo-600 bg-indigo-950/80 backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="text-center text-3xl font-extrabold text-indigo-100">
-            Welcome to Stockflow
+            Welcome to Invenstock
           </CardTitle>
           <CardDescription className="pt-2 text-center text-indigo-300">
             Choose your preferred sign-in method
@@ -149,10 +155,20 @@ function SignInComponent() {
           </div>
           <Tabs defaultValue="signin" className="w-full">
             <TabsList className="grid w-full grid-cols-2 bg-indigo-900/50 text-slate-300">
-              <TabsTrigger value="signin" className="data-[state=active]:bg-indigo-800 text-slate-300">Sign In</TabsTrigger>
-              <TabsTrigger value="signup" className="data-[state=active]:bg-indigo-800 text-slate-300">Sign Up</TabsTrigger>
+              <TabsTrigger
+                value="signin"
+                className="data-[state=active]:bg-indigo-800 text-slate-300"
+              >
+                Sign In
+              </TabsTrigger>
+              <TabsTrigger
+                value="signup"
+                className="data-[state=active]:bg-indigo-800 text-slate-300"
+              >
+                Sign Up
+              </TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="signin" className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="signin-email" className="text-indigo-300">
@@ -185,7 +201,11 @@ function SignInComponent() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-300"
                   >
-                    {showPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <FaEyeSlash className="h-4 w-4" />
+                    ) : (
+                      <FaEye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -241,7 +261,11 @@ function SignInComponent() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-400 hover:text-indigo-300"
                   >
-                    {showPassword ? <FaEyeSlash className="h-4 w-4" /> : <FaEye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <FaEyeSlash className="h-4 w-4" />
+                    ) : (
+                      <FaEye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -250,7 +274,9 @@ function SignInComponent() {
                 disabled={loadingProvider !== null}
                 className="w-full bg-purple-600 text-white hover:bg-purple-700"
               >
-                {loadingProvider === "email" ? "Creating account..." : "Create account"}
+                {loadingProvider === "email"
+                  ? "Creating account..."
+                  : "Create account"}
               </Button>
             </TabsContent>
           </Tabs>
@@ -276,7 +302,7 @@ function SignInComponent() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
 
 export default function SignInPage() {
@@ -284,5 +310,5 @@ export default function SignInPage() {
     <Suspense fallback={<div>Loading...</div>}>
       <SignInComponent />
     </Suspense>
-  )
+  );
 }

@@ -1,10 +1,6 @@
 // app/demo/layout.tsx
-import { AppSidebar } from "@/components/sidebar/demo-sidebar";
-import type React from "react";
-// import "./../globals.css";
-
-
-
+import type React from "react"; // Import React
+import "./../globals.css";
 
 
 export default function DemoLayout({
@@ -13,9 +9,8 @@ export default function DemoLayout({
   children: React.ReactNode;
 }) {
   return (
-      <div className="flex">
-        <main className="flex-1 overflow-auto p-6">{children}</main>
-          <AppSidebar />
-      </div>
+    <>
+      <main className="flex-1 overflow-auto p-6">{children}</main>
+    </>
   );
 }

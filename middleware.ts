@@ -1,56 +1,66 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from "next/server"
+import { auth } from "./app/(auth)/auth"
 
-export function middleware(request: NextRequest) {
-  const url = request.nextUrl;
-  const host = request.headers.get('host') || ''; // Get the host from headers
-  const baseDomain = process.env.BASE_DOMAIN || 'frostcore.tech'; // Use environment variable for base domain
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
 
-  // Check if the request is from localhost
-  const isLocalhost = host.includes('localhost');
+export async function middleware(request: NextRequest) {
+  const url = request.nextUrl
+  const host = request.headers.get("host") || ""
+  const baseDomain = process.env.BASE_DOMAIN || "frostcore.tech"
+  const isLocalhost = host.includes("localhost")
 
   // Extract the subdomain
-  let subdomain = '';
+  let subdomain = ""
   if (isLocalhost) {
-    const parts = host.split(':'); // Handle localhost:3000
-    subdomain = parts[0] === 'demo' ? 'demo' : '';
+    const parts = host.split(":")
+    subdomain = parts[0] === "demo" ? "demo" : ""
   } else {
-    const parts = host.split('.');
+    const parts = host.split(".")
     if (parts.length > 2) {
-      subdomain = parts.slice(0, -2).join('.');
+      subdomain = parts.slice(0, -2).join(".")
     }
   }
 
-  console.log('Host:', host, 'Subdomain:', subdomain, 'Pathname:', url.pathname);
+  console.log("Host:", host, "Subdomain:", subdomain, "Pathname:", url.pathname)
 
-  // ✅ Allow access to auth-related paths and static files
+  // Allow access to auth-related paths and static files
   if (
-    url.pathname.startsWith('/api/auth') ||
-    url.pathname.startsWith('/auth') ||
-    url.pathname.startsWith('/_next') ||
-    url.pathname.includes('.')
+    url.pathname.startsWith("/api/auth") ||
+    url.pathname.startsWith("/auth") ||
+    url.pathname.startsWith("/_next") ||
+    url.pathname.includes(".")
   ) {
-    return NextResponse.next();
+    return NextResponse.next()
   }
 
-  // ✅ For the demo subdomain, ensure the request URL uses the demo path prefix.
-  if (subdomain === 'demo' || host.startsWith('demo.')) {
-    // If the pathname already starts with /demo, then let it proceed.
-    if (!url.pathname.startsWith('/demo')) {
-      url.pathname = '/demo' + url.pathname;
-      return NextResponse.rewrite(url);
+  // Handle demo subdomain
+  if (subdomain === "demo" || host.startsWith("demo.")) {
+    if (!url.pathname.startsWith("/demo")) {
+      url.pathname = "/demo" + url.pathname
+      return NextResponse.rewrite(url)
     }
-    return NextResponse.next();
+    return NextResponse.next()
   }
 
-  // ✅ Handle requests to the root domain
-  if ((isLocalhost && host === 'localhost:3000') || (!isLocalhost && host === baseDomain)) {
-    const demoUrl = new URL(url);
-    demoUrl.host = isLocalhost ? 'demo.localhost:3000' : `demo.${baseDomain}`;
-    return NextResponse.redirect(demoUrl);
+  // Handle requests to the root domain
+  if ((isLocalhost && host === "localhost:3000") || (!isLocalhost && host === baseDomain)) {
+    // Allow access to the root domain without redirection
+    return NextResponse.next()
   }
-  // ✅ Redirect other subdomains to the signin page
-  const signInUrl = new URL('/api/auth/signin', url);
-  signInUrl.host = isLocalhost ? 'localhost:3000' : baseDomain;
-  return NextResponse.redirect(signInUrl);
+
+  // For other subdomains, check authentication
+  const session = await auth()
+
+  if (session) {
+    // User is authenticated, allow access
+    return NextResponse.next()
+  } else {
+    // User is not authenticated, redirect to signin
+    const signInUrl = new URL("/signin", url)
+    signInUrl.host = isLocalhost ? "localhost:3000" : baseDomain
+    return NextResponse.redirect(signInUrl)
+  }
 }
+

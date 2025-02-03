@@ -1,5 +1,5 @@
 // app/app/[subdomain]/layout.tsx
-import { auth } from "@/auth";
+import { auth } from "@/app/(auth)/auth";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { redirect } from "next/navigation";
 import type React from "react"; // Added import for React
@@ -13,7 +13,7 @@ export default async function UserLayout({
   const session = await auth()
 
   if (!session?.user) {
-    redirect("/auth/signin")
+    redirect("/signin")
   }
 
   // Here you can verify if the user has access to this subdomain

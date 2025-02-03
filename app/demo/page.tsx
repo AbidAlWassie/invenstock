@@ -53,7 +53,7 @@ export default function DemoPage() {
 
           <div className="mt-8 flex justify-center">
             <Link
-              href="/api/auth/signin"
+              href="/signin"
               className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
             >
               Sign In
