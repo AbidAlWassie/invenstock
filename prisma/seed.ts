@@ -15,7 +15,7 @@ async function deleteAllData() {
   await prisma.purchases.deleteMany({});
   console.log("Cleared data from purchases");
 
-  await prisma.users.deleteMany({});
+  await prisma.user.deleteMany({});
   console.log("Cleared data from users");
 }
 
@@ -39,7 +39,7 @@ async function main() {
   await seedModel("products.json", prisma.products);
   await seedModel("sales.json", prisma.sales);
   await seedModel("purchases.json", prisma.purchases);
-  await seedModel("users.json", prisma.users);
+  await seedModel("users.json", prisma.user);
 }
 
 main()
