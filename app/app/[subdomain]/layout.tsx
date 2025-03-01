@@ -21,7 +21,7 @@ export default async function UserLayout({
 
   return (
     <div className="flex">
-      <AppSidebar className="hidden md:flex" />
+      <AppSidebar className="hidden md:flex" session={null} />
       <main className="flex-1">{children}</main>
     </div>
   )

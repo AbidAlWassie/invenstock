@@ -1,14 +1,22 @@
 // app/(auth)/auth.config.ts
-import type { NextAuthConfig } from "next-auth"
-import GitHub from "next-auth/providers/github"
-import Google from "next-auth/providers/google"
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
+import type { NextAuthConfig } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 
-export const authConfig = {
+const prisma = new PrismaClient();
+
+export default {
+  adapter: PrismaAdapter(prisma),
   pages: {
     signIn: "/signin",
     signOut: "/signout",
     error: "/error",
     newUser: "/",
+    verifyRequest: "/verify-request",
   },
   providers: [
     Google({
@@ -19,19 +27,66 @@ export const authConfig = {
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
+    Credentials({
+      name: "credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email as string },
+          include: {
+            accounts: {
+              where: {
+                provider: "credentials",
+              },
+            },
+          },
+        });
+
+        if (!user || !user.accounts[0]?.hashedPassword) {
+          return null;
+        }
+
+        const passwordMatch = await bcrypt.compare(
+          credentials.password as string,
+          user.accounts[0].hashedPassword
+        );
+
+        if (!passwordMatch) {
+          return null;
+        }
+
+        if (!user.emailVerified) {
+          throw new Error("Email not verified");
+        }
+
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+        };
+      },
+    }),
   ],
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user
-      const isOnDashboard = nextUrl.pathname.startsWith("/dashboard")
-      if (isOnDashboard) {
-        if (isLoggedIn) return true
-        return false // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
-        return true
+    async session({ session, token }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
       }
-      return true
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
     },
   },
-} satisfies NextAuthConfig
-
+} satisfies NextAuthConfig;

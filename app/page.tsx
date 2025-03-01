@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default async function Home() {
   const session = await auth();
-  const demoUrl = `http://demo.${process.env.BASE_DOMAIN}`;
+  const demoUrl = `${process.env.PROTOCOL}demo.${process.env.BASE_DOMAIN}`;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-100 to-white px-4 py-16 sm:px-6 lg:px-8">

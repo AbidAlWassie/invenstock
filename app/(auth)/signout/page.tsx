@@ -1,12 +1,11 @@
-// app/(auth)/signout/page.tsx
 "use client";
 
+import Footer from "@/components/layouts/Footer";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -24,13 +23,13 @@ export default function SignOutPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-900 to-indigo-900 px-4 py-12 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md border-indigo-600 bg-indigo-950/80 backdrop-blur-sm">
+    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center text-3xl font-extrabold text-indigo-100">
+          <CardTitle className="text-center text-3xl font-extrabold">
             Sign Out
           </CardTitle>
-          <CardDescription className="pt-2 text-center text-indigo-300">
+          <CardDescription className="pt-2 text-center">
             Are you sure you want to sign out?
           </CardDescription>
         </CardHeader>
@@ -38,7 +37,7 @@ export default function SignOutPage() {
           <Button
             onClick={handleSignOut}
             disabled={isSigningOut}
-            className="w-full bg-red-600 text-white hover:bg-red-700"
+            className="w-full"
           >
             {isSigningOut ? (
               "Signing out..."
@@ -49,33 +48,11 @@ export default function SignOutPage() {
               </>
             )}
           </Button>
-          <Button
-            asChild
-            variant="outline"
-            className="w-full border-indigo-600 text-indigo-300 hover:bg-indigo-800 hover:text-indigo-100"
-          >
+          <Button asChild variant="outline" className="w-full">
             <Link href="/">Cancel</Link>
           </Button>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-2 text-center">
-          <p className="text-xs text-indigo-300">
-            Thank you for using our service.
-          </p>
-          <div className="text-xs text-slate-400">
-            <p>
-              Developed with 🍵 by{" "}
-              <Link
-                href="https://github.com/AbidAlWassie"
-                target="_blank"
-                className="font-bold text-blue-400"
-              >
-                Abid Al Wassie
-              </Link>
-              .
-            </p>
-            <p>© 2024 Notesap. All rights reserved.</p>
-          </div>
-        </CardFooter>
+        <Footer />
       </Card>
     </div>
   );
